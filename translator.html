@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalkMe多语言翻译助手</title>
+    <link rel="stylesheet" href="translator.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1 id="mainTitle">TalkMe多语言翻译助手</h1>
+            </div>
+            <p class="subtitle" id="subtitle">基于AI大模型的专业翻译工具，一键翻译多种语言</p>
+        </header>
+
+        <main class="main-content">
+            <!-- 配置面板 -->
+            <div class="config-panel">
+                <div class="config-header">
+                    <h3><i class="fas fa-cog"></i> 翻译配置</h3>
+                    <button class="toggle-config" id="toggleConfig">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="config-content" id="configContent">
+                    <div class="config-section">
+                        <label for="apiProvider">API提供商：</label>
+                        <select id="apiProvider">
+                            <option value="openai">OpenAI GPT</option>
+                            <option value="claude">Claude</option>
+                            <option value="gemini">Google Gemini</option>
+                            <option value="custom">自定义API</option>
+                        </select>
+                    </div>
+                    
+                    <div class="config-section">
+                        <label for="apiKey">API密钥：</label>
+                        <input type="password" id="apiKey" placeholder="请输入您的API密钥">
+                    </div>
+                    
+                    <div class="config-section">
+                        <label for="model">模型选择：</label>
+                        <select id="model">
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                            <option value="gpt-4o-mini">GPT-4o Mini</option>
+                            <option value="gpt-4o">GPT-4o</option>
+                            <option value="gpt-4">GPT-4</option>
+                            <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                            <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                            <option value="claude-3-opus">Claude 3 Opus</option>
+                        </select>
+                    </div>
+                    
+                    <div class="config-section">
+                        <label for="baseUrl">API基础URL：</label>
+                        <input type="text" id="baseUrl" placeholder="https://api.openai.com/v1">
+                    </div>
+                    
+                    <div class="config-section">
+                        <label for="customPrompt">翻译Prompt模板：</label>
+                        <textarea id="customPrompt" rows="4" placeholder="请将以下中文文本翻译成{language}，要求准确、自然、符合目标语言的表达习惯：\n\n{text}\n\n请只返回翻译结果，不要包含其他内容。"></textarea>
+                    </div>
+                    
+                    <div class="config-section">
+                        <label>目标语言：</label>
+                        <div class="language-checkboxes" id="languageCheckboxes">
+                            <!-- 语言选择器将由JavaScript动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <button class="save-config-btn" id="saveConfig">
+                        <i class="fas fa-save"></i>
+                        保存配置
+                    </button>
+                </div>
+            </div>
+
+            <!-- 翻译输入区域 -->
+            <div class="input-section">
+                <div class="input-header">
+                    <h3 id="inputTextTitle"><i class="fas fa-edit"></i> 输入文本</h3>
+                    <div class="input-tools">
+                        <div class="source-language-selector">
+                            <label for="sourceLanguage" id="sourceLanguageLabel">源语言：</label>
+                            <select id="sourceLanguage">
+                                <option value="chinese">🇨🇳 中文</option>
+                                <option value="english">🇺🇸 English</option>
+                            </select>
+                        </div>
+                        <button class="tool-btn" id="clearBtn" title="清空">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="tool-btn" id="pasteBtn" title="粘贴">
+                            <i class="fas fa-paste"></i>
+                        </button>
+                        <span class="char-count" id="charCount">0 字符</span>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <textarea 
+                        id="sourceText" 
+                        placeholder="请输入要翻译的文本..."
+                        rows="6"
+                    ></textarea>
+                    <button id="translateBtn" class="translate-btn">
+                        <i class="fas fa-language"></i>
+                        开始翻译
+                    </button>
+                </div>
+            </div>
+
+            <!-- 翻译结果区域 -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h3><i class="fas fa-globe"></i> 翻译结果</h3>
+                    <div class="result-tools">
+                        <button class="tool-btn" id="copyAllBtn" title="复制全部">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="tool-btn" id="exportBtn" title="导出">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="translation-grid" id="translationGrid">
+                    <!-- 翻译结果将动态生成 -->
+                </div>
+            </div>
+
+            <!-- 加载状态 -->
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>正在调用AI模型进行翻译...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- 历史记录 -->
+            <div class="history-section">
+                <div class="history-header">
+                    <h3><i class="fas fa-history"></i> 翻译历史</h3>
+                    <button class="tool-btn" id="clearHistoryBtn" title="清空历史">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="empty-history">
+                        <i class="fas fa-clock"></i>
+                        <p id="emptyHistoryText">暂无翻译历史</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="tips">
+                    <h4 id="tipsTitle"><i class="fas fa-lightbulb"></i> 使用提示</h4>
+                    <ul id="tipsList">
+                        <li>支持单句或段落翻译，建议每次不超过1000字符</li>
+                        <li>可自定义翻译Prompt以获得更符合需求的翻译结果</li>
+                        <li>API密钥仅存储在本地，不会上传到服务器</li>
+                        <li>支持导出翻译结果为文本文件</li>
+                    </ul>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalTranslations">0</span>
+                        <span class="stat-label" id="totalTranslationsLabel">总翻译次数</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalCharacters">0</span>
+                        <span class="stat-label" id="totalCharactersLabel">总字符数</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="translator.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能口语练习助手</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-comments"></i>
+                <h1>智能口语练习助手</h1>
+            </div>
+            <p class="subtitle">一句话生成个性化每日口语练习计划</p>
+        </header>
+
+        <main class="main-content">
+            <div class="input-section">
+                <div class="input-container">
+                    <textarea 
+                        id="userInput" 
+                        placeholder="请描述您的口语学习需求，例如：我想提高商务英语口语，重点练习会议发言和客户沟通..."
+                        rows="3"
+                    ></textarea>
+                    <button id="generateBtn" class="generate-btn">
+                        <i class="fas fa-magic"></i>
+                        生成练习计划
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="plan-header">
+                    <h2><i class="fas fa-calendar-day"></i> 今日口语练习计划</h2>
+                    <div class="plan-meta">
+                        <span class="date" id="currentDate"></span>
+                        <span class="difficulty" id="difficultyLevel"></span>
+                    </div>
+                </div>
+
+                <div class="practice-sections">
+                    <div class="section warm-up">
+                        <h3><i class="fas fa-fire"></i> 热身练习</h3>
+                        <div class="content" id="warmUpContent"></div>
+                    </div>
+
+                    <div class="section main-practice">
+                        <h3><i class="fas fa-microphone"></i> 核心练习</h3>
+                        <div class="content" id="mainPracticeContent"></div>
+                    </div>
+
+                    <div class="section scenarios">
+                        <h3><i class="fas fa-theater-masks"></i> 情景对话</h3>
+                        <div class="content" id="scenariosContent"></div>
+                    </div>
+
+                    <div class="section vocabulary">
+                        <h3><i class="fas fa-book"></i> 词汇扩展</h3>
+                        <div class="content" id="vocabularyContent"></div>
+                    </div>
+
+                    <div class="section homework">
+                        <h3><i class="fas fa-tasks"></i> 课后作业</h3>
+                        <div class="content" id="homeworkContent"></div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="regenerateBtn">
+                        <i class="fas fa-redo"></i>
+                        重新生成
+                    </button>
+                    <button class="btn btn-primary" id="saveBtn">
+                        <i class="fas fa-save"></i>
+                        保存计划
+                    </button>
+                    <button class="btn btn-success" id="startPracticeBtn">
+                        <i class="fas fa-play"></i>
+                        开始练习
+                    </button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>正在为您生成个性化练习计划...</p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="tips">
+                <h4><i class="fas fa-lightbulb"></i> 使用提示</h4>
+                <ul>
+                    <li>描述越详细，生成的计划越精准</li>
+                    <li>可以指定学习目标、难度级别、时间安排</li>
+                    <li>支持多种语言学习场景</li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
